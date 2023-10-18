@@ -95,16 +95,17 @@ for a_idx, a_win in enumerate(np.arange(0.1, 1, 0.1)):
         t_a = Thompson_Agent(2)
         agents = [g_a, e_g_a, u_a, t_a]
         for agent_idx, agent in enumerate(agents):
-            total_reward = 0
             for i in range(5):
-                if i == 0:
-                    chosen_arm = np.random.randint(2)
-                else:
-                    chosen_arm = agent.choose_arm()
-                reward = arms[chosen_arm].pull()
-                total_reward += reward
-                agent.update(chosen_arm, reward)
-            results[a_idx, b_idx, agent_idx] = total_reward / 5
+                total_reward = 0
+                for n in range(100):
+                    if n == 0:
+                        chosen_arm = np.random.randint(2)
+                    else:
+                        chosen_arm = agent.choose_arm()
+                    reward = arms[chosen_arm].pull()
+                    agent.update(chosen_arm, reward)
+                    total_reward += reward
+                results[a_idx, b_idx, agent_idx] += total_reward / 5
 
 import matplotlib.pyplot as plt
 
@@ -117,13 +118,26 @@ algorithms = ["Greedy", "Epsilon-Greedy", "UCB", "Thompson Sampling"]
 colors = ["red", "blue", "green", "purple"]
 
 for idx, (algo, color) in enumerate(zip(algorithms, colors)):
+    print(f"algorithm: {algo}")
+    print(f"total reward: {np.sum(results[:, :, idx])}")
     avg_values = results[:, :, idx].flatten()
-    plt.scatter(PA, PB, s=avg_values * 1500, c=color, label=algo, alpha=0.3)
+    plt.scatter(
+        PA + 0.01 * idx,
+        PB + 0.01 * idx,
+        s=avg_values * 40,
+        c=color,
+        alpha=0.3,
+    )
 
 plt.xlabel("E(P(A))")
 plt.ylabel("E(P(B))")
 plt.title("Comparison of Bandit Algorithms")
-plt.legend()
+plt.legend(
+    {algo: color for algo, color in zip(algorithms, colors)},
+    loc="center left",
+    fontsize=15,
+    markerscale=0.3,
+    bbox_to_anchor=(1, 0.5),
+)
 plt.grid(True)
 plt.savefig("bandit_comparison.png")
-
