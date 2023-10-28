@@ -14,3 +14,5 @@ Implementing a simple Gaussian Log-Likelihood
 - Submit your code to your respective GitHubs and one final image to this channel.
 
 ## Homework 3
+![KakaoTalk_20231024_220614022](https://github.com/JoonHong-Kim/rl-study/assets/30318926/8c6dd8f6-2368-44cb-945f-32290e6cc78e)
+Write a function that returns a value map when converging using policy evaluation and value iteration in the environment shown in the photo!
